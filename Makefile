@@ -5,14 +5,18 @@
 # Variables:
 CC = clang
 CFLAGS = -g -Wall -Wextra -Werror
+LIB = libft/libft.a
 NAME = pipex
 CFILES = \
 			src/pipex.c
 
 all: $(NAME)
 
-$(NAME):
-	$(CC) $(CFLAGS) $(CFILES) -o $(NAME)
+$(NAME): $(LIB)
+	$(CC) $(CFLAGS) $(CFILES) $(LIB) -o $(NAME)
+
+$(LIB):
+	make -C libft/
 
 clean:
 	@rm -f $(NAME)

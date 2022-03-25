@@ -39,12 +39,15 @@ A program is free software if users have all of these freedoms.
 
 #include "../include/pipex.h"
 
+git commit
+
 int	main(int argc, char *argv[])
 {
-	if (argc < 3)
+	if (argc != ARG_LIMIT)
 	{
-		ft_printf("Invalid number of arguments...");
+		ft_printf("Invalid number of arguments...\n");
 		return (EXIT_FAILURE);
 	}
+	read_file
 	return (EXIT_SUCCESS);
 }
