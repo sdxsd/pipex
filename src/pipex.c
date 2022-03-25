@@ -41,5 +41,10 @@ A program is free software if users have all of these freedoms.
 
 int	main(int argc, char *argv[])
 {
-
+	if (argc < 3)
+	{
+		ft_printf("Invalid number of arguments...");
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
 }

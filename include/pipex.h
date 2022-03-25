@@ -39,6 +39,7 @@ A program is free software if users have all of these freedoms.
 
 #ifndef PIPEX_H
 # define PIPEX_H
+# include <stdlib.h>
 # include "../libft/libft.h"
 
 #endif // PIPEX_H
