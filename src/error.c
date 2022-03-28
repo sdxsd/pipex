@@ -37,29 +37,11 @@ The definition of Free Software is as follows:
 A program is free software if users have all of these freedoms.
 */
 
-/* No matter where you go, every process is connected. */
-
 #include "../include/pipex.h"
+#include <stdio.h>
 
-int	*init_pipe(void)
+void	err_exit(void)
 {
-	int	*fd;
-
-	fd = malloc(sizeof(int) * 2);
-	pipe(fd);
-	return (fd);
-}
-
-int	main(int argc, char *argv[])
-{
-	int	*filedes;
-
-	filedes = malloc(sizeof(int) * 2);
-	pipe(filedes);
-	if (argc != ARG_LIMIT)
-	{
-		ft_printf("Invalid number of arguments...\n");
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
+	perror("ERROR");
+	exit (EXIT_FAILURE);
 }
