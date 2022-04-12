@@ -40,8 +40,8 @@ A program is free software if users have all of these freedoms.
 #include "../include/pipex.h"
 #include <stdio.h>
 
-void	err_exit(void)
+void	err_exit(char *error_string)
 {
-	perror("ERROR");
+	perror(error_string);
 	exit (EXIT_FAILURE);
 }

@@ -37,29 +37,43 @@ The definition of Free Software is as follows:
 A program is free software if users have all of these freedoms.
 */
 
-/* No matter where you go, every process is connected. */
+/* No matter where you go, every process is connected... */
 
 #include "../include/pipex.h"
-
-int	*init_pipe(void)
-{
-	int	*fd;
-
-	fd = malloc(sizeof(int) * 2);
-	pipe(fd);
-	return (fd);
-}
+#include <stdio.h>
 
 int	main(int argc, char *argv[])
 {
-	int	*filedes;
+	int 	fd[2];
+	int		pid;
+	char	c;
 
-	filedes = malloc(sizeof(int) * 2);
-	pipe(filedes);
 	if (argc != ARG_LIMIT)
 	{
-		ft_printf("Invalid number of arguments...\n");
+		ft_printf("Invalid number of arguments!\n");
 		return (EXIT_FAILURE);
+	}
+	if (pipe(fd) == -1)
+		err_exit("PLUMBING ERROR (main)");
+	pid = fork();
+	if (pid == -1)
+		err_exit("fork() failed (main):");
+	if (!pid)
+	{
+		dup2(fd[READ], STDIN_FILENO);
+		close(fd[WRITE]);
+		while (read(STDIN_FILENO, &c, 1) != EOF)
+		{
+			ft_putchar(c);
+		}
+		ft_putchar('\n');
+	}
+	if (pid)
+	{
+		dup2(fd[WRITE], STDOUT_FILENO);
+		close(fd[READ]);
+		ft_printf("Hello from parent process! %s", argv[1]);
+		close(fd[WRITE]);
 	}
 	return (EXIT_SUCCESS);
 }

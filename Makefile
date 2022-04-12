@@ -8,7 +8,8 @@ CFLAGS = -g -Wall -Wextra -Werror
 LIB = libft/libft.a
 NAME = pipex
 CFILES = \
-			src/pipex.c
+			src/pipex.c \
+			src/error.c
 
 all: $(NAME)
 

@@ -40,6 +40,11 @@ A program is free software if users have all of these freedoms.
 #ifndef PIPEX_H
 # define PIPEX_H
 # define ARG_LIMIT 5
+# define BUFSIZE 1024
+# define READ 0
+# define WRITE 1
+# define TRUE 1
+# define FALSE 0
 # include <stdlib.h>
 # include <fcntl.h>
 # include <unistd.h>
@@ -47,6 +52,6 @@ A program is free software if users have all of these freedoms.
 # include <limits.h>
 # include "../libft/libft.h"
 
-void	err_exit(void);
+void	err_exit(char *error_string);
 
 #endif // PIPEX_H
