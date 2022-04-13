@@ -62,17 +62,16 @@ int	main(int argc, char *argv[])
 	{
 		dup2(fd[READ], STDIN_FILENO);
 		close(fd[WRITE]);
-		while (read(STDIN_FILENO, &c, 1) != EOF)
+		while (read(STDIN_FILENO, &c, 1) != 0)
 		{
 			ft_putchar(c);
 		}
-		ft_putchar('\n');
 	}
 	if (pid)
 	{
 		dup2(fd[WRITE], STDOUT_FILENO);
 		close(fd[READ]);
-		ft_printf("Hello from parent process! %s", argv[1]);
+		ft_printf("Hello from parent process! %s\n", argv[1]);
 		close(fd[WRITE]);
 	}
 	return (EXIT_SUCCESS);
