@@ -37,16 +37,19 @@ The definition of Free Software is as follows:
 A program is free software if users have all of these freedoms.
 */
 
-#ifndef PIPEX_H
-# define PIPEX_H
-# include <stdlib.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <errno.h>
-# include <stdio.h>
-# include <limits.h>
-# include "../libft/libft.h"
+#ifndef DEFS_H
+# define DEFS_H
 
-void	err_exit(char *error_string);
+# define FORK_FAILURE -1
+# define FORK_CHILD 0
+# define FORK_PARENT 1
+# define ARG_LIMIT 5
+# define BUFSIZE 1024
+# define READ 0
+# define WRITE 1
+# define TRUE 1
+# define FALSE 0
+# define FAILURE 0
+# define SUCCESS 1
 
-#endif // PIPEX_H
+#endif // DEFS_H

@@ -40,7 +40,20 @@ A program is free software if users have all of these freedoms.
 /* No matter where you go, every process is connected... */
 
 #include "../include/pipex.h"
-#include <stdio.h>
+#include "../include/defs.h"
+
+static int	file_to_pipe(char *file, int write_end)
+{
+	int		fd;
+	char	c;
+
+	fd = open(file, O_RDONLY);
+	if (!file)
+		return (FAILURE);
+	while (read(fd, &c, 1) != 0)
+		write(write_end, &c, 1);
+	return (SUCCESS);
+}
 
 int	main(int argc, char *argv[])
 {
@@ -56,23 +69,20 @@ int	main(int argc, char *argv[])
 	if (pipe(fd) == -1)
 		err_exit("PLUMBING ERROR (main)");
 	pid = fork();
-	if (pid == -1)
-		err_exit("fork() failed (main):");
-	if (!pid)
+	if (pid == FORK_FAILURE)
+		err_exit("(main):");
+	if (pid == FORK_CHILD)
 	{
 		dup2(fd[READ], STDIN_FILENO);
 		close(fd[WRITE]);
 		while (read(STDIN_FILENO, &c, 1) != 0)
-		{
 			ft_putchar(c);
-		}
 	}
-	if (pid)
+	if (pid == FORK_PARENT)
 	{
 		dup2(fd[WRITE], STDOUT_FILENO);
 		close(fd[READ]);
-		ft_printf("Hello from parent process! %s\n", argv[1]);
-		close(fd[WRITE]);
+		while (read())
 	}
 	return (EXIT_SUCCESS);
 }
