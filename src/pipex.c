@@ -42,6 +42,11 @@ A program is free software if users have all of these freedoms.
 #include "../include/pipex.h"
 #include "../include/defs.h"
 
+static int	exec_pipe(int **fd)
+{
+
+}
+
 static int	file_to_pipe(char *file, int write_end)
 {
 	int		fd;
@@ -56,17 +61,11 @@ static int	file_to_pipe(char *file, int write_end)
 	return (SUCCESS);
 }
 
-int	main(int argc, char *argv[])
+static int	fork_and_pipe()
 {
-	int 	fd[2];
-	int		pid;
-	char	c;
+	int	pid;
+	int	fd[2];
 
-	if (argc != ARG_LIMIT)
-	{
-		ft_printf("Invalid number of arguments!\n");
-		return (EXIT_FAILURE);
-	}
 	if (pipe(fd) == -1)
 		err_exit("PLUMBING ERROR: (main)");
 	pid = fork();
@@ -74,16 +73,23 @@ int	main(int argc, char *argv[])
 		err_exit("(main):");
 	if (pid == FORK_CHILD)
 	{
-		dup2(fd[READ], STDIN_FILENO);
-		close(fd[WRITE]);
-		while (read(STDIN_FILENO, &c, 1) != 0)
-			ft_putchar(c);
-		close(fd[READ]);
+		exec_pipe();
 	}
 	dup2(fd[WRITE], STDOUT_FILENO);
 	close(fd[READ]);
 	if (!file_to_pipe(argv[1], fd[WRITE]))
 		err_exit("(file_to_pipe)");
 	close(fd[WRITE]);
+}
+
+int	main(int argc, char *argv[])
+{
+	if (argc != ARG_LIMIT)
+	{
+		ft_printf("Invalid number of arguments!\n");
+		return (EXIT_FAILURE);
+	}
+	fork_and_pipe();
+	waitpid(-1, NULL, WNOHANG);
 	return (EXIT_SUCCESS);
 }

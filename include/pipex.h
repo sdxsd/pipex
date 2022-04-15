@@ -40,6 +40,7 @@ A program is free software if users have all of these freedoms.
 #ifndef PIPEX_H
 # define PIPEX_H
 # include <stdlib.h>
+# include <sys/wait.h>
 # include <fcntl.h>
 # include <unistd.h>
 # include <errno.h>
