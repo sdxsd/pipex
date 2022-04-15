@@ -45,13 +45,14 @@ A program is free software if users have all of these freedoms.
 static int	file_to_pipe(char *file, int write_end)
 {
 	int		fd;
-	char	c;
+	int		c;
 
 	fd = open(file, O_RDONLY);
 	if (!file)
 		return (FAILURE);
 	while (read(fd, &c, 1) != 0)
-		write(write_end, &c, 1);
+		write(write_end, &c, write_end);
+	close(fd);
 	return (SUCCESS);
 }
 
@@ -67,7 +68,7 @@ int	main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	}
 	if (pipe(fd) == -1)
-		err_exit("PLUMBING ERROR (main)");
+		err_exit("PLUMBING ERROR: (main)");
 	pid = fork();
 	if (pid == FORK_FAILURE)
 		err_exit("(main):");
@@ -77,12 +78,12 @@ int	main(int argc, char *argv[])
 		close(fd[WRITE]);
 		while (read(STDIN_FILENO, &c, 1) != 0)
 			ft_putchar(c);
-	}
-	if (pid == FORK_PARENT)
-	{
-		dup2(fd[WRITE], STDOUT_FILENO);
 		close(fd[READ]);
-		while (read())
 	}
+	dup2(fd[WRITE], STDOUT_FILENO);
+	close(fd[READ]);
+	if (!file_to_pipe(argv[1], fd[WRITE]))
+		err_exit("(file_to_pipe)");
+	close(fd[WRITE]);
 	return (EXIT_SUCCESS);
 }
