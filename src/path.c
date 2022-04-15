@@ -44,7 +44,17 @@ A program is free software if users have all of these freedoms.
 
 char	*get_path_env(char *env[])
 {
+	const char	*p_str;
+	int			iterator;
 
+	iterator = 0;
+	while (ft_strncmp(p_str, env[iterator], ft_strlen(p_str)))
+	{
+		iterator++;
+		if (!env[iterator + 1])
+			return (NULL);
+	}
+	return (env[iterator]);
 }
 
 char	*get_path(char *prog_n, char *path_env)
