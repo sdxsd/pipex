@@ -57,7 +57,27 @@ char	*get_path_env(char *env[])
 	return (env[iterator]);
 }
 
-char	*get_path(char *prog_n, char *path_env)
+char	*get_path(char *prog_n, char *env[])
 {
+	static char	*path_env;
+	char		*abs_path;
+	char		**exec_direcs;
+	int			iter;
 
+	if (!path_env)
+		path_env = get_path_env(env);
+	exec_direcs = ft_split(path_env, ':');
+	while(exec_direcs[iter] != NULL)
+	{
+		abs_path = ft_strjoin(prog_n, exec_direcs[iter]);
+		if (!access(abs_path, F_OK))
+		{
+			free(exec_direcs);
+			return (abs_path);
+		}
+		free(abs_path);
+		iter++;
+	}
+	free
+	return ();
 }
