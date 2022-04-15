@@ -37,60 +37,17 @@ The definition of Free Software is as follows:
 A program is free software if users have all of these freedoms.
 */
 
-/* No matter where you go, every process is connected... */
+// I didn't ask for this...
 
 #include "../include/pipex.h"
 #include "../include/defs.h"
 
-static void	exec_pipe(int *fd, char *program)
+char	*get_path_env(char *env[])
 {
-	char	c;
-
-	dup2(fd[READ], STDIN_FILENO);
 
 }
 
-static int	file_to_pipe(char *file, int write_end)
+char	*get_path(char *prog_n, char *path_env)
 {
-	int		fd;
-	int		c;
 
-	fd = open(file, O_RDONLY);
-	if (!file)
-		return (FAILURE);
-	while (read(fd, &c, 1) != 0)
-		write(write_end, &c, write_end);
-	close(fd);
-	close(write_end);
-	return (SUCCESS);
-}
-
-static int	fork_and_pipe(char **argv)
-{
-	int	pid;
-	int	fd[2];
-
-	if (pipe(fd) == -1)
-		err_exit("PLUMBING ERROR: (main)");
-	pid = fork();
-	if (pid == FORK_FAILURE)
-		err_exit("(main):");
-	if (pid == FORK_CHILD)
-		exec_pipe(fd, argv[2]);
-	if (!file_to_pipe(argv[1], fd[WRITE]))
-		err_exit("(file_to_pipe):");
-	close(fd[WRITE]);
-	return (SUCCESS);
-}
-
-int	main(int argc, char *argv[], char *env[])
-{
-	if (argc != ARG_LIMIT)
-	{
-		ft_printf("Invalid number of arguments!\n");
-		return (EXIT_FAILURE);
-	}
-	fork_and_pipe(argv);
-	waitpid(-1, NULL, WNOHANG);
-	return (EXIT_SUCCESS);
 }
