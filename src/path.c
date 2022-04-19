@@ -42,7 +42,8 @@ A program is free software if users have all of these freedoms.
 #include "../include/pipex.h"
 #include "../include/defs.h"
 
-char	*get_path_env(char *env[])
+// Gets the path environment string.
+static char	*get_path_env(char *env[])
 {
 	const char	*p_str;
 	int			iterator;
@@ -57,6 +58,23 @@ char	*get_path_env(char *env[])
 	return (env[iterator]);
 }
 
+/* Returns number of elements freed */
+/* Assumes list ends with null ptr */
+static int	free_ptr_array(char *ptr[])
+{
+	int	iter;
+
+	iter = 0;
+	while (ptr[iter] != NULL)
+	{
+		free(ptr[iter]);
+		iter++;
+	}
+	return (iter);
+}
+
+/* Takes program name (prog_n), and environment strings (env) and returns */
+/* the absolute path to the program. */
 char	*get_path(char *prog_n, char *env[])
 {
 	static char	*path_env;
@@ -64,6 +82,7 @@ char	*get_path(char *prog_n, char *env[])
 	char		**exec_direcs;
 	int			iter;
 
+	iter = 0;
 	if (!path_env)
 		path_env = get_path_env(env);
 	exec_direcs = ft_split(path_env, ':');
@@ -72,12 +91,12 @@ char	*get_path(char *prog_n, char *env[])
 		abs_path = ft_strjoin(prog_n, exec_direcs[iter]);
 		if (!access(abs_path, F_OK))
 		{
-			free(exec_direcs);
+			free_ptr_array(exec_direcs);
 			return (abs_path);
 		}
 		free(abs_path);
 		iter++;
 	}
-	free
-	return ();
+	free_ptr_array(exec_direcs);
+	return (NULL);
 }

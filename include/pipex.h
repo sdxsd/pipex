@@ -49,5 +49,6 @@ A program is free software if users have all of these freedoms.
 # include "../libft/libft.h"
 
 void	err_exit(char *error_string);
+char	*get_path(char *prog_n, char *env[]);
 
 #endif // PIPEX_H
