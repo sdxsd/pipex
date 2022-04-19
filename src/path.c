@@ -45,17 +45,17 @@ A program is free software if users have all of these freedoms.
 // Gets the path environment string.
 static char	*get_path_env(char *env[])
 {
-	const char	*p_str;
+	const char	*p_str = "PATH=";
 	int			iterator;
 
 	iterator = 0;
 	while (ft_strncmp(p_str, env[iterator], ft_strlen(p_str)))
 	{
 		iterator++;
-		if (!env[iterator + 1])
+		if (!env[iterator])
 			return (NULL);
 	}
-	return (env[iterator]);
+	return (env[iterator] + ft_strlen(p_str));
 }
 
 /* Returns number of elements freed */
@@ -73,6 +73,17 @@ static int	free_ptr_array(char *ptr[])
 	return (iter);
 }
 
+static char	*combine_path(char *dir, char *prog_n)
+{
+	char	*abs_path;
+	char	*dir_slash;
+
+	dir_slash = ft_strjoin(dir, "/");
+	abs_path = ft_strjoin(dir_slash, prog_n);
+	free(dir_slash);
+	return (abs_path);
+}
+
 /* Takes program name (prog_n), and environment strings (env) and returns */
 /* the absolute path to the program. */
 char	*get_path(char *prog_n, char *env[])
@@ -88,7 +99,7 @@ char	*get_path(char *prog_n, char *env[])
 	exec_direcs = ft_split(path_env, ':');
 	while(exec_direcs[iter] != NULL)
 	{
-		abs_path = ft_strjoin(prog_n, exec_direcs[iter]);
+		abs_path = combine_path(exec_direcs[iter], prog_n);
 		if (!access(abs_path, F_OK))
 		{
 			free_ptr_array(exec_direcs);

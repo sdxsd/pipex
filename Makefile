@@ -9,7 +9,8 @@ LIB = libft/libft.a
 NAME = pipex
 CFILES = \
 			src/pipex.c \
-			src/error.c
+			src/error.c \
+			src/path.c
 
 all: $(NAME)
 
