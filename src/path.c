@@ -42,7 +42,7 @@ A program is free software if users have all of these freedoms.
 #include "../include/pipex.h"
 #include "../include/defs.h"
 
-// Gets the path environment string.
+/* Gets the path environment string. */
 static char	*get_path_env(char *env[])
 {
 	const char	*p_str = "PATH=";
@@ -73,6 +73,7 @@ static int	free_ptr_array(char *ptr[])
 	return (iter);
 }
 
+/* Utility function for combining program name and the paths. */
 static char	*combine_path(char *dir, char *prog_n)
 {
 	char	*abs_path;
@@ -97,7 +98,7 @@ char	*get_path(char *prog_n, char *env[])
 	if (!path_env)
 		path_env = get_path_env(env);
 	exec_direcs = ft_split(path_env, ':');
-	while(exec_direcs[iter] != NULL)
+	while (exec_direcs[iter] != NULL)
 	{
 		abs_path = combine_path(exec_direcs[iter], prog_n);
 		if (!access(abs_path, F_OK))
