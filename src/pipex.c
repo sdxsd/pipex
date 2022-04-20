@@ -42,38 +42,38 @@ A program is free software if users have all of these freedoms.
 #include "../include/pipex.h"
 #include "../include/defs.h"
 
-/* static int	file_to_pipe(char *file, int write_end) */
-/* { */
-/* 	int		fd; */
-/* 	int		c; */
+static int	file_to_pipe(char *file, int write_end)
+{
+	int		fd;
+	int		c;
 
-/* 	fd = open(file, O_RDONLY); */
-/* 	if (!file) */
-/* 		return (FAILURE); */
-/* 	while (read(fd, &c, 1) != 0) */
-/* 		write(write_end, &c, write_end); */
-/* 	close(fd); */
-/* 	close(write_end); */
-/* 	return (SUCCESS); */
-/* } */
+	fd = open(file, O_RDONLY);
+	if (!file)
+		return (FAILURE);
+	while (read(fd, &c, 1) != 0)
+		write(write_end, &c, write_end);
+	close(fd);
+	close(write_end);
+	return (SUCCESS);
+}
 
-/* static int	fork_and_pipe(char **argv) */
-/* { */
-/* 	int	pid; */
-/* 	int	fd[2]; */
+static int	fork_and_pipe(char **argv)
+{
+	int	pid;
+	int	fd[2];
 
-/* 	if (pipe(fd) == -1) */
-/* 		err_exit("PLUMBING ERROR: (main)"); */
-/* 	pid = fork(); */
-/* 	if (pid == FORK_FAILURE) */
-/* 		err_exit("(main):"); */
-/* 	if (pid == FORK_CHILD) */
-/* 		; */
-/* 	if (!file_to_pipe(argv[1], fd[WRITE])) */
-/* 		err_exit("(file_to_pipe):"); */
-/* 	close(fd[WRITE]); */
-/* 	return (SUCCESS); */
-/* } */
+	if (pipe(fd) == -1)
+		err_exit("PLUMBING ERROR: (main)");
+	pid = fork();
+	if (pid == FORK_FAILURE)
+		err_exit("(main):");
+	if (pid == FORK_CHILD)
+		;
+	if (!file_to_pipe(argv[1], fd[WRITE]))
+		err_exit("(file_to_pipe):");
+	close(fd[WRITE]);
+	return (SUCCESS);
+}
 
 int	main(int argc, char *argv[], char *env[])
 {
@@ -83,10 +83,7 @@ int	main(int argc, char *argv[], char *env[])
 		ft_printf("Invalid number of arguments!\n");
 		return (EXIT_FAILURE);
 	}
-	path = get_path(argv[1], env);
-	printf("%s\n", path);
-	free(path);
-	/* fork_and_pipe(argv); */
-	/* waitpid(-1, NULL, WNOHANG); */
+	fork_and_pipe(argv);
+	waitpid(-1, NULL, WNOHANG);
 	return (EXIT_SUCCESS);
 }
