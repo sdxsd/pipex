@@ -67,7 +67,6 @@ static int	free_ptr_array(char *ptr[])
 	iter = 0;
 	while (ptr[iter] != NULL)
 	{
-		ft_printf("FREED: %s\n", ptr[iter]);
 		free(ptr[iter]);
 		iter++;
 	}

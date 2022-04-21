@@ -44,3 +44,9 @@ void	err_exit(char *error_string)
 	perror(error_string);
 	exit (EXIT_FAILURE);
 }
+
+int		print_return(char *string, int ret_code)
+{
+	ft_putstr(string);
+	return (ret_code);
+}

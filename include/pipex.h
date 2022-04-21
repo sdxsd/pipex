@@ -39,6 +39,7 @@ A program is free software if users have all of these freedoms.
 
 #ifndef PIPEX_H
 # define PIPEX_H
+
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <fcntl.h>
@@ -48,7 +49,11 @@ A program is free software if users have all of these freedoms.
 # include <limits.h>
 # include "../libft/libft.h"
 
+/* Utility error functions. */
 void	err_exit(char *error_string);
+int		print_return(char *string, int ret_code);
+
+/* Path functions  */
 char	*get_path(char *prog_n, char *env[]);
 
 #endif // PIPEX_H
