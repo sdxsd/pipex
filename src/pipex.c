@@ -87,6 +87,7 @@ static int	fork_and_pipe(char *argv[], char *env[])
 		close(fd[WRITE]);
 		exec_pipe(fd[READ], STDOUT_FILENO, argv[2], env);
 	}
+	close(fd[READ]);
 	if (!file_to_pipe(argv[1], fd[WRITE]))
 		err_exit(argv[1]);
 	close(fd[WRITE]);
