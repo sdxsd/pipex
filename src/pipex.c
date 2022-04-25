@@ -50,8 +50,8 @@ static int	file_to_pipe(char *file, int write_end)
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		return (FAILURE);
-	while (read(fd, &c, 1) != 0)
-		write(write_end, &c, write_end);
+	while (read(fd, &c, 1) != 0 && c != 0)
+		write(write_end, &c, 1);
 	close(fd);
 	close(write_end);
 	return (SUCCESS);
@@ -63,8 +63,10 @@ static void	exec_pipe(int i_fd, int o_fd, char *prog_n, char *env[])
 	char	**args;
 	char	*path;
 
+	if (o_fd)
+		;
 	dup2(i_fd, STDIN_FILENO);
-	dup2(o_fd, STDOUT_FILENO);
+	//dup2(o_fd, STDOUT_FILENO);
 	args = ft_split(prog_n, ' ');
 	path = get_path(args[0], env);
 	if (!path)
