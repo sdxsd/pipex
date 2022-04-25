@@ -37,7 +37,7 @@ The definition of Free Software is as follows:
 A program is free software if users have all of these freedoms.
 */
 
-// I didn't ask for this...
+/* I didn't ask for this... */
 
 #include "../include/pipex.h"
 #include "../include/defs.h"

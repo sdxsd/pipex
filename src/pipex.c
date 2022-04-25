@@ -57,16 +57,14 @@ static int	file_to_pipe(char *file, int write_end)
 	return (SUCCESS);
 }
 
-/* Executes a program with input and output fds as specified in arguments.  */
+/* Executes a program with input and output fds as specified in arguments. */
 static void	exec_pipe(int i_fd, int o_fd, char *prog_n, char *env[])
 {
 	char	**args;
 	char	*path;
 
-	if (o_fd)
-		;
 	dup2(i_fd, STDIN_FILENO);
-	//dup2(o_fd, STDOUT_FILENO);
+	dup2(o_fd, STDOUT_FILENO);
 	args = ft_split(prog_n, ' ');
 	path = get_path(args[0], env);
 	if (!path)
@@ -74,10 +72,13 @@ static void	exec_pipe(int i_fd, int o_fd, char *prog_n, char *env[])
 	execve(path, args, env);
 }
 
+/* Bloody mess of a function.  */
 static int	fork_and_pipe(char *argv[], char *env[])
 {
 	int	pid;
 	int	fd[2];
+	int	fd_2[2];
+	int	o_file;
 
 	if (pipe(fd) == -1)
 		err_exit("PLUMBING ERROR IN (fork_and_pipe)");
@@ -87,7 +88,21 @@ static int	fork_and_pipe(char *argv[], char *env[])
 	if (pid == FORK_CHILD)
 	{
 		close(fd[WRITE]);
-		exec_pipe(fd[READ], STDOUT_FILENO, argv[2], env);
+		if (pipe(fd) == -1)
+			err_exit("PLUMBING ERROR IN (child: fork_and_pipe)");
+		pid = fork();
+		if (pid == FORK_FAILURE)
+			err_exit("SPOON AT (child: fork_and_pipe)");
+		if (pid == FORK_CHILD)
+		{
+			close(fd_2[WRITE]);
+			o_file = open(argv[4], O_WRONLY);
+			if (!o_file)
+				err_exit("(CHILD_2: fork_and_pipe)");
+			exec_pipe(fd_2[READ], o_file, argv[3], env);
+		}
+		close(fd_2[READ]);
+		exec_pipe(fd[READ], fd_2[WRITE], argv[2], env);
 	}
 	close(fd[READ]);
 	if (!file_to_pipe(argv[1], fd[WRITE]))
