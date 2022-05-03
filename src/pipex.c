@@ -88,7 +88,7 @@ static int	fork_and_pipe(char *argv[], char *env[])
 	if (pid == FORK_CHILD)
 	{
 		close(fd[WRITE]);
-		if (pipe(fd) == -1)
+		if (pipe(fd_2) == -1)
 			err_exit("PLUMBING ERROR IN (child: fork_and_pipe)");
 		pid = fork();
 		if (pid == FORK_FAILURE)
@@ -96,9 +96,9 @@ static int	fork_and_pipe(char *argv[], char *env[])
 		if (pid == FORK_CHILD)
 		{
 			close(fd_2[WRITE]);
-			o_file = open(argv[4], O_WRONLY);
-			if (!o_file)
-				err_exit("(CHILD_2: fork_and_pipe)");
+			o_file = open(argv[4], O_WRONLY | O_CREAT, S_IRWXU);
+			if (o_file == -1)
+				err_exit(argv[4]);
 			exec_pipe(fd_2[READ], o_file, argv[3], env);
 		}
 		close(fd_2[READ]);
