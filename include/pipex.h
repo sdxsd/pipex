@@ -50,7 +50,7 @@ A program is free software if users have all of these freedoms.
 # include "../libft/libft.h"
 
 /* Utility error functions. */
-void	err_exit(char *error_string);
+void	err_exit(char *error_string, int exit_code);
 int		print_return(char *string, int ret_code);
 
 /* Path functions  */

@@ -39,13 +39,13 @@ A program is free software if users have all of these freedoms.
 
 #include "../include/pipex.h"
 
-void	err_exit(char *error_string)
+void	err_exit(char *error_string, int exit_code)
 {
 	perror(error_string);
-	exit (EXIT_FAILURE);
+	exit (exit_code);
 }
 
-int		print_return(char *string, int ret_code)
+int	print_return(char *string, int ret_code)
 {
 	ft_putstr(string);
 	return (ret_code);

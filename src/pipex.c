@@ -42,21 +42,6 @@ A program is free software if users have all of these freedoms.
 #include "../include/pipex.h"
 #include "../include/defs.h"
 
-static int	file_to_pipe(char *file, int write_end)
-{
-	int		fd;
-	int		c;
-
-	fd = open(file, O_RDONLY);
-	if (fd == -1)
-		return (FAILURE);
-	while (read(fd, &c, 1) != 0 && c != 0)
-		write(write_end, &c, 1);
-	close(fd);
-	close(write_end);
-	return (SUCCESS);
-}
-
 /* Executes a program with input and output fds as specified in arguments. */
 static void	exec_pipe(int i_fd, int o_fd, char *prog_n, char *env[])
 {
@@ -68,53 +53,41 @@ static void	exec_pipe(int i_fd, int o_fd, char *prog_n, char *env[])
 	args = ft_split(prog_n, ' ');
 	path = get_path(args[0], env);
 	if (!path)
-		err_exit(prog_n);
+		err_exit(prog_n, EXIT_FAILURE);
 	execve(path, args, env);
 }
 
-/* Bloody mess of a function.  */
-static int	fork_and_pipe(char *argv[], char *env[])
+static void	fork_and_pipe(char *argv[], char *env[])
 {
 	int	pid;
 	int	fd[2];
-	int	fd_2[2];
+	int	i_file;
 	int	o_file;
 
 	if (pipe(fd) == -1)
-		err_exit("PLUMBING ERROR IN (fork_and_pipe)");
+		err_exit("PLUMBING ERROR IN (fork_and_pipe)", EXIT_FAILURE);
+	i_file = open(argv[1], O_RDONLY);
+	if (!i_file)
+		err_exit(argv[1], EXIT_FAILURE);
+	o_file = open(argv[4], O_WRONLY | O_CREAT, S_IRWXU);
+	if (!o_file)
+		err_exit(argv[4], EXIT_FAILURE);
 	pid = fork();
 	if (pid == FORK_FAILURE)
-		err_exit("SPOON AT (fork_and_pipe)");
+		err_exit("SPOON AT (fork_and_pipe)", EXIT_FAILURE);
 	if (pid == FORK_CHILD)
 	{
 		close(fd[WRITE]);
-		if (pipe(fd_2) == -1)
-			err_exit("PLUMBING ERROR IN (child: fork_and_pipe)");
-		pid = fork();
-		if (pid == FORK_FAILURE)
-			err_exit("SPOON AT (child: fork_and_pipe)");
-		if (pid == FORK_CHILD)
-		{
-			close(fd_2[WRITE]);
-			o_file = open(argv[4], O_WRONLY | O_CREAT, S_IRWXU);
-			if (o_file == -1)
-				err_exit(argv[4]);
-			exec_pipe(fd_2[READ], o_file, argv[3], env);
-		}
-		close(fd_2[READ]);
-		exec_pipe(fd[READ], fd_2[WRITE], argv[2], env);
+		exec_pipe(fd[READ], o_file, argv[3], env);
 	}
 	close(fd[READ]);
-	if (!file_to_pipe(argv[1], fd[WRITE]))
-		err_exit(argv[1]);
-	close(fd[WRITE]);
-	return (SUCCESS);
+	exec_pipe(i_file, fd[WRITE], argv[2], env);
 }
 
 int	main(int argc, char *argv[], char *env[])
 {
 	if (argc != ARG_LIMIT)
-		print_return("INSUFFICIENT ARGUMENTS\n", EXIT_FAILURE);
+		err_exit("INSUFFICIENT ARGUMENTS\n", EXIT_FAILURE);
 	fork_and_pipe(argv, env);
 	waitpid(-1, NULL, WNOHANG);
 	return (EXIT_SUCCESS);
