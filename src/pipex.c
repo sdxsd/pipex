@@ -53,7 +53,10 @@ static void	exec_pipe(int i_fd, int o_fd, char *prog_n, char *env[])
 	args = ft_split(prog_n, ' ');
 	path = get_path(args[0], env);
 	if (!path)
+	{
+		free_ptr_array(args);
 		err_exit(prog_n, EXIT_FAILURE);
+	}
 	execve(path, args, env);
 }
 
@@ -89,6 +92,5 @@ int	main(int argc, char *argv[], char *env[])
 	if (argc != ARG_LIMIT)
 		err_exit("INSUFFICIENT ARGUMENTS\n", EXIT_FAILURE);
 	fork_and_pipe(argv, env);
-	waitpid(-1, NULL, WNOHANG);
 	return (EXIT_SUCCESS);
 }

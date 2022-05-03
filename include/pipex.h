@@ -49,6 +49,9 @@ A program is free software if users have all of these freedoms.
 # include <limits.h>
 # include "../libft/libft.h"
 
+/* Free pointer array */
+int		free_ptr_array(char *ptr[]);
+
 /* Utility error functions. */
 void	err_exit(char *error_string, int exit_code);
 int		print_return(char *string, int ret_code);

@@ -60,7 +60,7 @@ static char	*get_path_env(char *env[])
 
 /* Returns number of elements freed */
 /* Assumes list ends with null ptr */
-static int	free_ptr_array(char *ptr[])
+int	free_ptr_array(char *ptr[])
 {
 	int	iter;
 
