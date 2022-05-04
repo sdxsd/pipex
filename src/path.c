@@ -98,6 +98,8 @@ char	*get_path(char *prog_n, char *env[])
 	iter = 0;
 	if (!path_env)
 		path_env = get_path_env(env);
+	if (!path_env)
+		return (NULL);
 	exec_direcs = ft_split(path_env, ':');
 	while (exec_direcs[iter] != NULL)
 	{

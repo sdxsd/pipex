@@ -48,16 +48,21 @@ static void	exec_pipe(int i_fd, int o_fd, char *prog_n, char *env[])
 	char	**args;
 	char	*path;
 
-	dup2(i_fd, STDIN_FILENO);
-	dup2(o_fd, STDOUT_FILENO);
 	args = ft_split(prog_n, ' ');
-	path = get_path(args[0], env);
+	if (ft_strnstr(args[0], "/", ft_strlen(args[0])))
+		path = args[0];
+	else
+		path = get_path(args[0], env);
 	if (!path)
 	{
 		free_ptr_array(args);
-		err_exit(prog_n, EXIT_FAILURE);
+		ft_printf("%s: Unable to find path to executable\n", prog_n);
+		exit(EXIT_FAILURE);
 	}
-	execve(path, args, env);
+	dup2(i_fd, STDIN_FILENO);
+	dup2(o_fd, STDOUT_FILENO);
+	if (execve(path, args, env) == -1)
+		err_exit(path, EXIT_FAILURE);
 }
 
 /* Main function handling pipes and forking, as well as input/output files.  */
@@ -80,14 +85,18 @@ static void	fork_and_pipe(char *argv[], char *env[], int i_file, int o_file)
 	exec_pipe(i_file, fd[WRITE], argv[2], env);
 }
 
-/* Handles the opening of the input/output file descriptors before executing the piping.  */
+/* Handles the opening of the input/output file descriptors */
+/* before executing the piping. */
 int	main(int argc, char *argv[], char *env[])
 {
 	int	i_file;
 	int	o_file;
 
 	if (argc != ARG_LIMIT)
-		err_exit("INSUFFICIENT ARGUMENTS\n", EXIT_FAILURE);
+	{
+		ft_putstr_fd("INSUFFICIENT ARGUMENTS\n", STDERR_FILENO);
+		return (EXIT_FAILURE);
+	}
 	i_file = open(argv[1], O_RDONLY);
 	if (i_file == -1)
 		err_exit(argv[1], EXIT_FAILURE);
