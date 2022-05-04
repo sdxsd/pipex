@@ -60,21 +60,14 @@ static void	exec_pipe(int i_fd, int o_fd, char *prog_n, char *env[])
 	execve(path, args, env);
 }
 
-static void	fork_and_pipe(char *argv[], char *env[])
+/* Main function handling pipes and forking, as well as input/output files.  */
+static void	fork_and_pipe(char *argv[], char *env[], int i_file, int o_file)
 {
 	int	pid;
 	int	fd[2];
-	int	i_file;
-	int	o_file;
 
 	if (pipe(fd) == -1)
 		err_exit("PLUMBING ERROR IN (fork_and_pipe)", EXIT_FAILURE);
-	i_file = open(argv[1], O_RDONLY);
-	if (i_file == -1)
-		err_exit(argv[1], EXIT_FAILURE);
-	o_file = open(argv[4], O_WRONLY | O_CREAT, S_IRWXU);
-	if (o_file == -1)
-		err_exit(argv[4], EXIT_FAILURE);
 	pid = fork();
 	if (pid == FORK_FAILURE)
 		err_exit("SPOON AT (fork_and_pipe)", EXIT_FAILURE);
@@ -87,10 +80,19 @@ static void	fork_and_pipe(char *argv[], char *env[])
 	exec_pipe(i_file, fd[WRITE], argv[2], env);
 }
 
+/* Handles the opening of the input/output file descriptors before executing the piping.  */
 int	main(int argc, char *argv[], char *env[])
 {
+	int	i_file;
+	int	o_file;
+
 	if (argc != ARG_LIMIT)
 		err_exit("INSUFFICIENT ARGUMENTS\n", EXIT_FAILURE);
-	fork_and_pipe(argv, env);
-	return (EXIT_SUCCESS);
+	i_file = open(argv[1], O_RDONLY);
+	if (i_file == -1)
+		err_exit(argv[1], EXIT_FAILURE);
+	o_file = open(argv[4], O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+	if (o_file == -1)
+		err_exit(argv[4], EXIT_FAILURE);
+	fork_and_pipe(argv, env, i_file, o_file);
 }
