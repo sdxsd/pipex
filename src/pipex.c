@@ -55,8 +55,8 @@ static void	exec_pipe(int i_fd, int o_fd, char *prog_n, char *env[])
 		path = get_path(args[0], env);
 	if (!path)
 	{
+		ft_printf("%s: Unable to find path to executable\n", args[0]);
 		free_ptr_array(args);
-		ft_printf("%s: Unable to find path to executable\n", prog_n);
 		exit(EXIT_FAILURE);
 	}
 	dup2(i_fd, STDIN_FILENO);

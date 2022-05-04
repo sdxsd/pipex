@@ -81,7 +81,11 @@ static char	*combine_path(char *dir, char *prog_n)
 	char	*dir_slash;
 
 	dir_slash = ft_strjoin(dir, "/");
+	if (!dir_slash)
+		err_exit("malloc (combine_path)", EXIT_FAILURE);
 	abs_path = ft_strjoin(dir_slash, prog_n);
+	if (!abs_path)
+		err_exit("malloc (combine_path)", EXIT_FAILURE);
 	free(dir_slash);
 	return (abs_path);
 }
