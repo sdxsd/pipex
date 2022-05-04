@@ -70,10 +70,10 @@ static void	fork_and_pipe(char *argv[], char *env[])
 	if (pipe(fd) == -1)
 		err_exit("PLUMBING ERROR IN (fork_and_pipe)", EXIT_FAILURE);
 	i_file = open(argv[1], O_RDONLY);
-	if (!i_file)
+	if (i_file == -1)
 		err_exit(argv[1], EXIT_FAILURE);
 	o_file = open(argv[4], O_WRONLY | O_CREAT, S_IRWXU);
-	if (!o_file)
+	if (o_file == -1)
 		err_exit(argv[4], EXIT_FAILURE);
 	pid = fork();
 	if (pid == FORK_FAILURE)
