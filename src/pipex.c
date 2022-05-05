@@ -100,7 +100,7 @@ int	main(int argc, char *argv[], char *env[])
 	i_file = open(argv[1], O_RDONLY);
 	if (i_file == -1)
 		err_exit(argv[1], EXIT_FAILURE);
-	o_file = open(argv[4], O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+	o_file = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	if (o_file == -1)
 		err_exit(argv[4], EXIT_FAILURE);
 	fork_and_pipe(argv, env, i_file, o_file);
